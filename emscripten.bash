@@ -12,6 +12,7 @@ emcc -O2 -std=c++14 -I./mednes -c -o ./build/RAM.o ./mednes/RAM.cpp
 emcc -O2 -std=c++14 -I./mednes -c -o ./build/ROM.o ./mednes/ROM.cpp
 emcc -O2 -std=c++14 -I./mednes -c -o ./build/CNROM.o ./mednes/Mapper/CNROM.cpp
 emcc -O2 -std=c++14 -I./mednes -c -o ./build/Mapper.o ./mednes/Mapper/Mapper.cpp
+emcc -O2 -std=c++14 -I./mednes -c -o ./build/MMC1.o ./mednes/Mapper/MMC1.cpp
 emcc -O2 -std=c++14 -I./mednes -c -o ./build/NROM.o ./mednes/Mapper/NROM.cpp
 emcc -O2 -std=c++14 -I./mednes -c -o ./build/UnROM.o ./mednes/Mapper/UnROM.cpp
 

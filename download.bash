@@ -1,10 +1,10 @@
 #!/bin/bash
 
-wget https://github.com/wpmed92/MedNES/archive/6dea45ae5b3d4e36d03a4d2b5ea6a66b6d148e3d.zip
-unzip 6dea45ae5b3d4e36d03a4d2b5ea6a66b6d148e3d.zip MedNES-6dea45ae5b3d4e36d03a4d2b5ea6a66b6d148e3d/NES/*
-rm 6dea45ae5b3d4e36d03a4d2b5ea6a66b6d148e3d.zip
-mv MedNES-6dea45ae5b3d4e36d03a4d2b5ea6a66b6d148e3d/NES mednes
-rmdir MedNES-6dea45ae5b3d4e36d03a4d2b5ea6a66b6d148e3d
+wget https://github.com/wpmed92/MedNES/archive/9c29af2c46b1b3b9b1d3825bc1322bfa72ae75e6.zip
+unzip 9c29af2c46b1b3b9b1d3825bc1322bfa72ae75e6.zip MedNES-9c29af2c46b1b3b9b1d3825bc1322bfa72ae75e6/Source/Core/*
+rm 9c29af2c46b1b3b9b1d3825bc1322bfa72ae75e6.zip
+mv MedNES-9c29af2c46b1b3b9b1d3825bc1322bfa72ae75e6/Source/Core mednes
+rm -rf MedNES-9c29af2c46b1b3b9b1d3825bc1322bfa72ae75e6
 
 sed -i 's#    RAM ram;#public:\n    RAM ram;\nprivate:#g' mednes/6502.hpp
 sed -i 's#    u8 vram\[2048\] = { 0 };#public:\n    u8 vram\[2048\] = { 0 };\nprivate:#g' mednes/PPU.hpp
