@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="http://content.sniklaus.com/content.css">
 		<script type="text/javascript" src="http://content.sniklaus.com/content.js"></script>
 	</head>
-	<body style="margin:0px auto 0px auto; max-width:620px;">
+	<body style="margin:0px auto 0px auto; max-width:720px;">
 
 <!-- ########################################################## -->
 
@@ -16,13 +16,23 @@
 	<a class="btn btn-primary" href="#">
 		<div><i class="fas fa-save"></i></div>
 		<span>Load</span>
-		<input type="file" accept=".nes" style="bottom:0px; height:100%; left:0px; opacity:0.0; position:absolute; right:0px; top:0px; width:100%; z-index:1;" />
+		<input type="file" accept=".nes" style="cursor:pointer; bottom:0px; height:100%; left:0px; opacity:0.0; position:absolute; right:0px; top:0px; width:100%; z-index:1;" />
 	</a>
 
 	<a class="btn btn-primary" href="https://github.com/sniklaus/nes-memoryview">
 		<div><i class="fab fa-github"></i></div>
 		<span>GitHub</span>
 	</a>
+</div>
+
+<div class="card">
+	<div class="card-header text-white bg-primary">
+		NES Memoryview
+	</div>
+	
+	<div class="card-body">
+		<p>The working memory of early computers is quite small. It is so small in fact, that we can plot the history of values of each byte in memory. Below, you can find a NES emulator together with a time series for each byte in the 2 KB of working memory. Feel free to load a different ROM, for example Super Mario Bros, and notice that some bytes in memory correspond to the location of sprites. This demo is using <a href="https://github.com/wpmed92/MedNES">MedNES</a> and <a href="https://shiru.untergrund.net/software.shtml">Chase</a>.</p>
+	</div>
 </div>
 
 <div class="card">
@@ -186,19 +196,19 @@
 		})();
 
 		(function funcLoad() {
-			var objRequest = new XMLHttpRequest();
+			var objAjax = new XMLHttpRequest();
 
-			objRequest.open('GET', 'https://content.sniklaus.com/nesmem/chase.nes', true);
+			objAjax.open('GET', 'https://content.sniklaus.com/nesmem/chase.nes', true);
 
-			objRequest.responseType = 'arraybuffer';
+			objAjax.responseType = 'arraybuffer';
 
-			objRequest.onload = function() {
-				Emscripten.FS.writeFile('/rom.nes', new Uint8Array(objRequest.response), {});
+			objAjax.onload = function() {
+				Emscripten.FS.writeFile('/rom.nes', new Uint8Array(objAjax.response), {});
 
 				Emscripten.init('/rom.nes');
 			};
 
-			objRequest.send();
+			objAjax.send();
 		})();
 	});
 </script>
