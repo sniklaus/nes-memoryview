@@ -1,219 +1,219 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-		<link rel="stylesheet" type="text/css" href="http://content.sniklaus.com/content.css">
-		<script type="text/javascript" src="http://content.sniklaus.com/content.js"></script>
-	</head>
-	<body style="margin:0px auto 0px auto; max-width:720px;">
+        <link rel="stylesheet" type="text/css" href="http://content.sniklaus.com/content.css">
+        <script type="text/javascript" src="http://content.sniklaus.com/content.js"></script>
+    </head>
+    <body style="margin:0px auto 0px auto; max-width:720px;">
 
 <!-- ########################################################## -->
 
 <div class="btn-bar">
-	<a class="btn btn-primary" href="#">
-		<div><i class="fas fa-save"></i></div>
-		<span>Load</span>
-		<input type="file" accept=".nes" style="cursor:pointer; bottom:0px; height:100%; left:0px; opacity:0.0; position:absolute; right:0px; top:0px; width:100%; z-index:1;" />
-	</a>
+    <a class="btn btn-primary" href="#">
+        <div><i class="fa-solid fa-save"></i></div>
+        <span>Load</span>
+        <input type="file" accept=".nes" style="cursor:pointer; bottom:0px; height:100%; left:0px; opacity:0.0; position:absolute; right:0px; top:0px; width:100%; z-index:1;" />
+    </a>
 
-	<a class="btn btn-primary" href="https://github.com/sniklaus/nes-memoryview">
-		<div><i class="fab fa-github"></i></div>
-		<span>GitHub</span>
-	</a>
+    <a class="btn btn-primary" href="https://github.com/sniklaus/nes-memoryview">
+        <div><i class="fa-brands fa-github"></i></div>
+        <span>GitHub</span>
+    </a>
 </div>
 
 <div class="card">
-	<div class="card-header text-white bg-primary">
-		NES Memoryview
-	</div>
-	
-	<div class="card-body">
-		<p>The working memory of early computers is quite small. It is so small in fact, that we can plot the history of values of each byte in memory. Below, you can find a NES emulator together with a time series for each byte in the 2 KB of working memory. Feel free to load a different ROM, for example Super Mario Bros, and notice that some bytes in memory correspond to the location of sprites. This demo is using <a href="https://github.com/wpmed92/MedNES">MedNES</a> and <a href="https://shiru.untergrund.net/software.shtml">Chase</a>.</p>
-	</div>
+    <div class="card-header text-white bg-primary">
+        NES Memoryview
+    </div>
+    
+    <div class="card-body">
+        <p>The working memory of early computers is quite small. It is so small in fact, that we can plot the history of values of each byte in memory. Below, you can find a NES emulator together with a time series for each byte in the 2 KB of working memory. Feel free to load a different ROM, for example Super Mario Bros, and notice that some bytes in memory correspond to the location of sprites. This demo is using <a href="https://github.com/wpmed92/MedNES">MedNES</a> and <a href="https://shiru.untergrund.net/software.shtml">Chase</a>.</p>
+    </div>
 </div>
 
 <div class="card">
-	<div class="card-body">
-		<div style="margin:0px auto 0px auto; max-width:100%; position:relative; width:512px;">
-			<canvas style="max-width:100%;"></canvas>
+    <div class="card-body">
+        <div style="margin:0px auto 0px auto; max-width:100%; position:relative; width:512px;">
+            <canvas style="max-width:100%;"></canvas>
 
-			<div style="background-color:#FFFFFF; bottom:11px; font-size:10px; left:50%; margin:0px 0px 0px -142px; padding:0px 4px 0px 4px; position:absolute; user-select:none;">
-				use <b>arrow keys</b>, <b>enter</b> (start), <b>space</b> (select), <b>X</b> (A), and <b>C</b> (B)
-			</div>
-		</div>
+            <div style="background-color:#FFFFFF; bottom:11px; font-size:10px; left:50%; margin:0px 0px 0px -142px; padding:0px 4px 0px 4px; position:absolute; user-select:none;">
+                use <b>arrow keys</b>, <b>enter</b> (start), <b>space</b> (select), <b>X</b> (A), and <b>C</b> (B)
+            </div>
+        </div>
 
-		<canvas style="display:block; margin:7px auto 7px auto; max-width:100%;"></canvas>
+        <canvas style="display:block; margin:7px auto 7px auto; max-width:100%;"></canvas>
 
-		<input type="range" min="0" max="112" value="0" style="display:block; margin:0px auto 0px auto; max-width:100%; width:589px;" />
-	</div>
+        <input type="range" min="0" max="112" value="0" style="display:block; margin:0px auto 0px auto; max-width:100%; width:589px;" />
+    </div>
 </div>
 
 <script type="text/javascript" src="emscripten.js"></script>
 <script type="text/javascript">
-	var intGamewidth = 512;
-	var intGameheight = 480;
+    var intGamewidth = 512;
+    var intGameheight = 480;
 
-	var intChartwidth = 593;
-	var intChartheight = 340;
-	var intCharthor = 30;
-	var intChartver = 15;
-	var intChartpadding = 5;
-	var intChartboundary = [238, 238, 238];
-	var intChartline = [0, 0, 0];
+    var intChartwidth = 593;
+    var intChartheight = 340;
+    var intCharthor = 30;
+    var intChartver = 15;
+    var intChartpadding = 5;
+    var intChartboundary = [238, 238, 238];
+    var intChartline = [0, 0, 0];
 
-	jQuery(window.document)
-		.on('keydown', function(objEvent) {
-			if ([37, 38, 39, 40, 88, 67, 32, 13].indexOf(objEvent.keyCode) !== -1) {
-				objEvent.preventDefault();
-			}
+    jQuery(window.document)
+        .on('keydown', function(objEvent) {
+            if ([37, 38, 39, 40, 88, 67, 32, 13].indexOf(objEvent.keyCode) !== -1) {
+                objEvent.preventDefault();
+            }
 
-			window.Emscripten.key(1, objEvent.keyCode);
-		})
-		.on('keyup', function(objEvent) {
-			if ([37, 38, 39, 40, 88, 67, 32, 13].indexOf(objEvent.keyCode) !== -1) {
-				objEvent.preventDefault();
-			}
+            window.Emscripten.key(1, objEvent.keyCode);
+        })
+        .on('keyup', function(objEvent) {
+            if ([37, 38, 39, 40, 88, 67, 32, 13].indexOf(objEvent.keyCode) !== -1) {
+                objEvent.preventDefault();
+            }
 
-			window.Emscripten.key(0, objEvent.keyCode);
-		})
-	;
+            window.Emscripten.key(0, objEvent.keyCode);
+        })
+    ;
 
-	jQuery('input').eq(0)
-		.on('change', function() {
-			var objFilereader = new FileReader();
-			
-			objFilereader.onload = function(objEvent) {
-				Emscripten.FS.writeFile('/rom.nes', new Uint8Array(objEvent.target.result), {});
+    jQuery('input').eq(0)
+        .on('change', function() {
+            var objFilereader = new FileReader();
+            
+            objFilereader.onload = function(objEvent) {
+                Emscripten.FS.writeFile('/rom.nes', new Uint8Array(objEvent.target.result), {});
 
-				Emscripten.init('/rom.nes');
-			};
-			
-			if (jQuery('input').eq(0).get(0).files !== undefined) {
-				if (jQuery('input').eq(0).get(0).files.length === 1) {
-					objFilereader.readAsArrayBuffer(jQuery('input').eq(0).get(0).files[0]);
-				}
-			}
-		})
-	;
+                Emscripten.init('/rom.nes');
+            };
+            
+            if (jQuery('input').eq(0).get(0).files !== undefined) {
+                if (jQuery('input').eq(0).get(0).files.length === 1) {
+                    objFilereader.readAsArrayBuffer(jQuery('input').eq(0).get(0).files[0]);
+                }
+            }
+        })
+    ;
 
-	Emscripten().then(function(Module) {
-		window.Emscripten = Module;
+    Emscripten().then(function(Module) {
+        window.Emscripten = Module;
 
-		window.Emscripten.init = Emscripten.cwrap('init', null, [ 'string' ]);
-		window.Emscripten.render = Emscripten.cwrap('render', null, [ 'number' ]);
-		window.Emscripten.key = Emscripten.cwrap('key', null, [ 'number', 'number' ]);
-		window.Emscripten.ram = Emscripten.cwrap('ram', null, [ 'number', 'number' ]);
+        window.Emscripten.init = Emscripten.cwrap('init', null, [ 'string' ]);
+        window.Emscripten.render = Emscripten.cwrap('render', null, [ 'number' ]);
+        window.Emscripten.key = Emscripten.cwrap('key', null, [ 'number', 'number' ]);
+        window.Emscripten.ram = Emscripten.cwrap('ram', null, [ 'number', 'number' ]);
 
-		var objGamecanvas = jQuery('canvas').get(0);
+        var objGamecanvas = jQuery('canvas').get(0);
 
-		objGamecanvas.width = intGamewidth;
-		objGamecanvas.height = intGameheight;
+        objGamecanvas.width = intGamewidth;
+        objGamecanvas.height = intGameheight;
 
-		var objGamecontext = objGamecanvas.getContext('2d');
-		var objGamepixels = new Uint8Array(Emscripten.HEAPU8.buffer, Emscripten._malloc(intGamewidth * intGameheight * 4), intGamewidth * intGameheight * 4);
+        var objGamecontext = objGamecanvas.getContext('2d');
+        var objGamepixels = new Uint8Array(Emscripten.HEAPU8.buffer, Emscripten._malloc(intGamewidth * intGameheight * 4), intGamewidth * intGameheight * 4);
 
-		var objChartcanvas = jQuery('canvas').get(1);
+        var objChartcanvas = jQuery('canvas').get(1);
 
-		objChartcanvas.width = intChartwidth;
-		objChartcanvas.height = intChartheight;
+        objChartcanvas.width = intChartwidth;
+        objChartcanvas.height = intChartheight;
 
-		var objChartcontext = objChartcanvas.getContext('2d');
-		var objChartpixel = objChartcontext.createImageData(1, 1);
+        var objChartcontext = objChartcanvas.getContext('2d');
+        var objChartpixel = objChartcontext.createImageData(1, 1);
 
-		var objCpuram = new Uint8Array(Emscripten.HEAPU8.buffer, Emscripten._malloc(2048), 2048);
-		var objPpuram = new Uint8Array(Emscripten.HEAPU8.buffer, Emscripten._malloc(2048), 2048);
+        var objCpuram = new Uint8Array(Emscripten.HEAPU8.buffer, Emscripten._malloc(2048), 2048);
+        var objPpuram = new Uint8Array(Emscripten.HEAPU8.buffer, Emscripten._malloc(2048), 2048);
 
-		var objHistory = [];
+        var objHistory = [];
 
-		(function funcLoop() {
-			Emscripten.render(objGamepixels.byteOffset);
-			objGamecontext.putImageData(new ImageData(new Uint8ClampedArray(objGamepixels), intGamewidth, intGameheight), 0, 0);
-			Emscripten.ram(objCpuram.byteOffset, objPpuram.byteOffset);
+        (function funcLoop() {
+            Emscripten.render(objGamepixels.byteOffset);
+            objGamecontext.putImageData(new ImageData(new Uint8ClampedArray(objGamepixels), intGamewidth, intGameheight), 0, 0);
+            Emscripten.ram(objCpuram.byteOffset, objPpuram.byteOffset);
 
-			objHistory.push(objCpuram.slice(0));
+            objHistory.push(objCpuram.slice(0));
 
-			if (objHistory.length > intCharthor) {
-				objHistory.shift();
+            if (objHistory.length > intCharthor) {
+                objHistory.shift();
 
-				var intOffset = parseInt(jQuery('input').eq(1).val(), 10);
+                var intOffset = parseInt(jQuery('input').eq(1).val(), 10);
 
-				objChartcontext.fillStyle = '#FFFFFF';
-				objChartcontext.fillRect(0, 0, intChartwidth, intChartheight);
+                objChartcontext.fillStyle = '#FFFFFF';
+                objChartcontext.fillRect(0, 0, intChartwidth, intChartheight);
 
-				objChartpixel.data[0] = intChartline[0];
-				objChartpixel.data[1] = intChartline[1];
-				objChartpixel.data[2] = intChartline[2];
-				objChartpixel.data[3] = 255;
+                objChartpixel.data[0] = intChartline[0];
+                objChartpixel.data[1] = intChartline[1];
+                objChartpixel.data[2] = intChartline[2];
+                objChartpixel.data[3] = 255;
 
-				objChartcontext.fillStyle = '#000000';
-				objChartcontext.font = '9px Courier New';
-				objChartcontext.textAlign = 'center';
+                objChartcontext.fillStyle = '#000000';
+                objChartcontext.font = '9px Courier New';
+                objChartcontext.textAlign = 'center';
 
-				for (var intHor = 0; intHor < 16; intHor += 1) {
-					var intX = ((intHor + 1) * (intCharthor + intChartpadding)) + Math.round(intCharthor / 2.0);
-					var intY = intChartver;
+                for (var intHor = 0; intHor < 16; intHor += 1) {
+                    var intX = ((intHor + 1) * (intCharthor + intChartpadding)) + Math.round(intCharthor / 2.0);
+                    var intY = intChartver;
 
-					objChartcontext.fillText('0x' + (intHor + intOffset).toString(16).toUpperCase().padStart(2, '0') + '0', intX, intY);
-				}
+                    objChartcontext.fillText('0x' + (intHor + intOffset).toString(16).toUpperCase().padStart(2, '0') + '0', intX, intY);
+                }
 
-				objChartcontext.fillStyle = '#000000';
-				objChartcontext.font = '9px Courier New';
-				objChartcontext.textAlign = 'right';
+                objChartcontext.fillStyle = '#000000';
+                objChartcontext.font = '9px Courier New';
+                objChartcontext.textAlign = 'right';
 
-				for (var intVer = 0; intVer < 16; intVer += 1) {
-					var intX = intCharthor;
-					var intY = ((intVer + 1) * (intChartver + intChartpadding)) + Math.round(intChartver / 2.0) + 3;
+                for (var intVer = 0; intVer < 16; intVer += 1) {
+                    var intX = intCharthor;
+                    var intY = ((intVer + 1) * (intChartver + intChartpadding)) + Math.round(intChartver / 2.0) + 3;
 
-					objChartcontext.fillText('0x00' + intVer.toString(16).toUpperCase(), intX, intY);
-				}
+                    objChartcontext.fillText('0x00' + intVer.toString(16).toUpperCase(), intX, intY);
+                }
 
-				objChartcontext.fillStyle = 'rgb(' + intChartboundary[0] + ',' + intChartboundary[1] + ',' + intChartboundary[2] + ')';
+                objChartcontext.fillStyle = 'rgb(' + intChartboundary[0] + ',' + intChartboundary[1] + ',' + intChartboundary[2] + ')';
 
-				for (var intHor = 0; intHor < 16; intHor += 1) {
-					for (var intVer = 0; intVer < 16; intVer += 1) {
-						var intX = (intHor + 1) * (intCharthor + intChartpadding);
-						var intY = (intVer + 1) * (intChartver + intChartpadding);
+                for (var intHor = 0; intHor < 16; intHor += 1) {
+                    for (var intVer = 0; intVer < 16; intVer += 1) {
+                        var intX = (intHor + 1) * (intCharthor + intChartpadding);
+                        var intY = (intVer + 1) * (intChartver + intChartpadding);
 
-						var intMemory = ((intHor + intOffset) * 16) + intVer;
+                        var intMemory = ((intHor + intOffset) * 16) + intVer;
 
-						objChartcontext.fillRect(intX, intY, intCharthor, intChartver);
+                        objChartcontext.fillRect(intX, intY, intCharthor, intChartver);
 
-						if (intMemory >= 2048) {
-							continue;
-						}
+                        if (intMemory >= 2048) {
+                            continue;
+                        }
 
-						for (var intHistory = 0; intHistory < intCharthor; intHistory += 1) {
-							objChartcontext.putImageData(objChartpixel, intX + intHistory, intY + intChartver - Math.round(objHistory[intHistory][intMemory] / 255.0 * intChartver));
-						}
-					}
-				}
-			}
+                        for (var intHistory = 0; intHistory < intCharthor; intHistory += 1) {
+                            objChartcontext.putImageData(objChartpixel, intX + intHistory, intY + intChartver - Math.round(objHistory[intHistory][intMemory] / 255.0 * intChartver));
+                        }
+                    }
+                }
+            }
 
-			window.requestAnimationFrame(funcLoop);
-		})();
+            window.requestAnimationFrame(funcLoop);
+        })();
 
-		(function funcLoad() {
-			var objAjax = new XMLHttpRequest();
+        (function funcLoad() {
+            var objAjax = new XMLHttpRequest();
 
-			objAjax.open('GET', 'https://content.sniklaus.com/nesmem/chase.nes', true);
+            objAjax.open('GET', 'https://content.sniklaus.com/nesmem/chase.nes', true);
 
-			objAjax.responseType = 'arraybuffer';
+            objAjax.responseType = 'arraybuffer';
 
-			objAjax.onload = function() {
-				Emscripten.FS.writeFile('/rom.nes', new Uint8Array(objAjax.response), {});
+            objAjax.onload = function() {
+                Emscripten.FS.writeFile('/rom.nes', new Uint8Array(objAjax.response), {});
 
-				Emscripten.init('/rom.nes');
-			};
+                Emscripten.init('/rom.nes');
+            };
 
-			objAjax.send();
-		})();
-	});
+            objAjax.send();
+        })();
+    });
 </script>
 
 <!-- ########################################################## -->
 
-	</body>
+    </body>
 </html>
